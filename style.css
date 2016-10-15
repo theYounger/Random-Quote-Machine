@@ -1,0 +1,9 @@
+#quoteStation {
+   background-color: red;
+   height: 500px;
+}
+.stationRow {
+   background-color: blue;
+   height:100px;
+   margin-top: 10px;
+}
