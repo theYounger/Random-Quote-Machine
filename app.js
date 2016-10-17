@@ -1,42 +1,44 @@
-function eventHandlerHookup() {
+var frontPage;
 
-   function quoteBtnClick(eventObject) {
-     var currBg = stationRow.css("background-color");
-      var currMarTop = stationRow.css("margin-top");
-      var currMarTopNum = Number(currMarTop.slice(0, currMarTop.length - 2));
-
-      if(currBg != "rgb(0, 0, 255)") {
-         currBg = "rgb(0, 0, 255)";
-      } else {
-         currBg = "rgb(0, 255, 0)";
-      }
-
-      stationRow
-         .css("background-color", currBg)
-         .css("margin-top", ++currMarTopNum);
+function getRedditJSON(subreddit) {
+   var oReq = new XMLHttpRequest();
+   oReq.open("GET", "https://www.reddit.com" + subreddit + ".json");
+   oReq.onload = function() {
+      var json = JSON.parse(this.responseText);
+      frontPage = json.data.children;
+   };
+   oReq.onerror = function() {
+      var error = $("<p></p>").html("Reddit and I aren't on speaking terms at the moment. Please refresh or come back later.");
+      $("body").append(error);
    }
-
-   var quoteStation = $("#quoteStation");
-   var stationRow = $(".stationRow");
-   var quoteBtn = $("#quoteBtn");
-
-   quoteStation.click( function(eventObject) {
-      quoteStation.css("background-color", "purple");
-   })
-
-   quoteBtn.on("click", { foo: "bar" }, quoteBtnClick );
+   oReq.send();
 }
 
-$(document).ready(eventHandlerHookup);
+function mapFrontPage (data, fn) {
+   var results = data.map(function(element) {
+      return fn(element.data.title);
+   });
+   return results;
+}
 
-      // var xml = new XMLHttpRequest();
-      // xml
-      //    .onload = function(json) {
-      //       console.log(JSON.stringify(json));
-      //    }
-      //    .open("GET", "https://en.wikipedia.org/w/api.php?action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json")
-      //    .setRequestHeader("Api-User-Agent", "Chrome/53.0.2785.143")
-      //    .send();
-      // var p = $("p")
-      // p.html("Lucky me");
-      // $(".stationRow").append(p);
+function eventHandlerHookup() {
+   function quoteBtnClick() {
+      function titleParser(title) {
+         var arrSplit = title.split(/[.―~-]/g);
+         return [arrSplit[0], arrSplit[arrSplit.length -1]];
+      }
+
+      var fullQuote = mapFrontPage(frontPage, titleParser);
+      var randomNum = Math.floor(Math.random() * 26) + 1;
+      var quote = fullQuote[randomNum][0];
+      var author = fullQuote[randomNum][1];
+
+      $("#quote").html(quote);
+      $("#author").html(author);
+   }
+
+   $("#quoteBtn").click(quoteBtnClick);
+}
+
+getRedditJSON("/r/quotes");
+$(document).ready(eventHandlerHookup);
