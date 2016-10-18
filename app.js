@@ -1,5 +1,3 @@
-var frontPage;
-
 function getRedditJSON(subreddit) {
    var oReq = new XMLHttpRequest();
    oReq.open("GET", "https://www.reddit.com" + subreddit + ".json");
@@ -28,17 +26,43 @@ function eventHandlerHookup() {
          return [arrSplit[0], arrSplit[arrSplit.length -1]];
       }
 
+      function rowEffects() {
+         function slideFadeColorize(height) {
+            var colors = ["#3BE2FF", "#3BFF3B", "#FF3B62", "#FFD042"]
+            $("#row3").fadeOut(null, function() {
+               $("#invisiRow").height(height + 100);
+               $("#row3").fadeTo(0, 1, function() {
+                  $("#quote").html(quote);
+                  $("#author").html(author);
+               }).css("background-color", colors[randomRange(0, 3)]);
+            });
+         }
+
+         var invisiHeight = $("#invisiRow").height();
+
+         if(invisiHeight < 300) {
+            slideFadeColorize(invisiHeight);
+         } else {
+            slideFadeColorize(-100);
+         }
+      }
+
       var fullQuote = mapFrontPage(frontPage, titleParser);
-      var randomNum = Math.floor(Math.random() * 26) + 1;
+      var randomNum = randomRange(0, 26);
       var quote = fullQuote[randomNum][0];
       var author = fullQuote[randomNum][1];
 
-      $("#quote").html(quote);
-      $("#author").html(author);
+      rowEffects();
    }
 
    $("#quoteBtn").click(quoteBtnClick);
 }
+
+function randomRange(myMin, myMax) {
+  return Math.floor(Math.random() * (myMax - myMin + 1)) + myMin;
+}
+
+var frontPage;
 
 getRedditJSON("/r/quotes");
 $(document).ready(eventHandlerHookup);
