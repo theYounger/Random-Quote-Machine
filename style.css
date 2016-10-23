@@ -13,11 +13,17 @@ body {
 }
 #head {
    background-color: #26212B;
+   text-align: center;
 }
-.fa-reddit-alien {
-   cursor: pointer;
+#main-header {
    color: white;
 }
+.fa-reddit-alien {
+   margin-top: 30px;
+   color: white;
+   cursor: pointer;
+}
+
 
 /* BOOTSRAP */
 .center-block {

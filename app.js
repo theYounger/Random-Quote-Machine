@@ -29,7 +29,7 @@ function eventHandlerHookup() {
       function rowEffects() {
          function slideFadeColorize(height) {
             var colors = ["rgb(59, 226, 255)", "rgb(59, 255, 59)", "rgb(255, 59, 98)", "rgb(255, 208, 66)"];
-            var chosenColor = function compareColors() {
+               chosenColor = function compareColors() {
                var randomColor = colors[randomRange(0,3)];
                if($("#row3").css("background-color") !== randomColor) {
                   return randomColor;
@@ -45,8 +45,6 @@ function eventHandlerHookup() {
                   $("#reddit-url").attr("href", quoteUrl);
                }).css("background-color", chosenColor);
             });
-
-            $(".fa-reddit-alien").css("color", chosenColor);
          }
 
          var invisiHeight = $("#invisiRow").height();
@@ -65,10 +63,21 @@ function eventHandlerHookup() {
       var author = quoteYou[randomNum][1];
       var encodedURI = "https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=" + encodeURI('"' + quote + '"' + " ― " + author);
 
-      $("#twitter-btn").attr("href", encodedURI);
+   $("#twitter-btn").attr("href", encodedURI);
       rowEffects();
    }
 
+   function hoverIn() {
+      $(this).css("color", "white");
+   }
+
+   function hoverOut() {
+      $(this).css("color", chosenColor);
+   }
+
+   var chosenColor;
+
+   $(".fa-reddit-alien").hover(hoverIn, hoverOut);
    $(".fa-reddit-alien").click(quoteBtnClick);
 }
 
