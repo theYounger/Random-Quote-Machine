@@ -1,16 +1,22 @@
+body {
+   background-color: #26212B;
+}
 #quoteStation {
    background-color: #26212B;
-   height: 525px;
+   height: 425px;
 }
 .stationRow {
    background-color: #FFD042;
-   height:100px;
-   width: 500px;
+   height:150px;
+   width: 700px;
    margin-top: 10px;
 }
-#quoteBtn {
-   height: 40px;
-   width: 60px;
+#head {
+   background-color: #26212B;
+}
+.fa-reddit-alien {
+   cursor: pointer;
+   color: white;
 }
 
 /* BOOTSRAP */

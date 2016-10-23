@@ -23,19 +23,30 @@ function eventHandlerHookup() {
    function quoteBtnClick() {
       function titleParser(title) {
          var arrSplit = title.split(/[.―~-]/g);
+         arrSplit[0] = arrSplit[0].replace(/^["']/, " ");
          return [arrSplit[0], arrSplit[arrSplit.length -1]];
       }
-
       function rowEffects() {
          function slideFadeColorize(height) {
-            var colors = ["#3BE2FF", "#3BFF3B", "#FF3B62", "#FFD042"]
+            var colors = ["rgb(59, 226, 255)", "rgb(59, 255, 59)", "rgb(255, 59, 98)", "rgb(255, 208, 66)"];
+            var chosenColor = function compareColors() {
+               var randomColor = colors[randomRange(0,3)];
+               if($("#row3").css("background-color") !== randomColor) {
+                  return randomColor;
+               }
+               return compareColors();
+            }();
+
             $("#row3").fadeOut(null, function() {
-               $("#invisiRow").height(height + 100);
-               $("#row3").fadeTo(0, 1, function() {
+               $("#invisiRow").height(height + 150);
+               $(this).fadeTo(0, 1, function() {
                   $("#quote").html(quote);
                   $("#author").html(author);
-               }).css("background-color", colors[randomRange(0, 3)]);
+                  $("#reddit-url").attr("href", quoteUrl);
+               }).css("background-color", chosenColor);
             });
+
+            $(".fa-reddit-alien").css("color", chosenColor);
          }
 
          var invisiHeight = $("#invisiRow").height();
@@ -47,15 +58,18 @@ function eventHandlerHookup() {
          }
       }
 
-      var fullQuote = mapFrontPage(frontPage, titleParser);
+      var quoteYou = mapFrontPage(frontPage, titleParser);
       var randomNum = randomRange(0, 26);
-      var quote = fullQuote[randomNum][0];
-      var author = fullQuote[randomNum][1];
+      var quoteUrl = frontPage[randomNum].data.url;
+      var quote = quoteYou[randomNum][0];
+      var author = quoteYou[randomNum][1];
+      var encodedURI = "https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=" + encodeURI('"' + quote + '"' + " ― " + author);
 
+      $("#twitter-btn").attr("href", encodedURI);
       rowEffects();
    }
 
-   $("#quoteBtn").click(quoteBtnClick);
+   $(".fa-reddit-alien").click(quoteBtnClick);
 }
 
 function randomRange(myMin, myMax) {
